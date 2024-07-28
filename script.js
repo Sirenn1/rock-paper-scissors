@@ -1,64 +1,80 @@
 let humanScore = 0;
 let computerScore = 0;
+let humanChoice = '';
+let computerChoice = '';
+let rounds = 0;
+let prompt = '';
 
-function computerChoice() {
-    let random = Math.floor(Math.random() * 3);
-    let choice;
+const rockButton = document.querySelector(".rock-button");
+rockButton.addEventListener("click", () => {
+    humanChoice = 'Rock';
+    generateChoice();
+});
 
-    if (random === 0) {
-        choice = "ROCK";
-    } else if (random === 1) {
-        choice = "PAPER";
+const paperButton = document.querySelector(".paper-button");
+paperButton.addEventListener("click", () => {
+    humanChoice = 'Paper';
+    generateChoice();
+});
+
+const scissorButton = document.querySelector(".scissor-button");
+scissorButton.addEventListener("click", () => {
+    humanChoice = 'Scissor';
+    generateChoice();
+});
+
+function generateChoice() {
+    let choiceArray = ['Rock', 'Paper', 'Scissor'];
+    let index = Math.floor(Math.random() * 3);
+    computerChoice = choiceArray[index];
+    console.log(computerChoice);
+    determineWinner();
+}
+
+function determineWinner() {
+    if (computerChoice === humanChoice) {
+        rounds++;
+        prompt = "It's a tie";
+    } else if (
+        (humanChoice === 'Rock' && computerChoice === 'Scissor') ||
+        (humanChoice === 'Paper' && computerChoice === 'Rock') ||
+        (humanChoice === 'Scissor' && computerChoice === 'Paper')
+    ) {
+        rounds++;
+        humanScore++;
+        prompt = "You Win";
     } else {
-        choice = "SCISSORS";
+        rounds++;
+        computerScore++;
+        prompt = "Computer Wins";
     }
-
-    return choice;
+    updateDisplay();
 }
 
-function humanChoice() {
-    let getChoice;
+const computerMove = document.createElement('div');
+computerMove.innerText = `Computer's move: ${computerChoice}`;
+console.log(`Computer Move : ${computerChoice}`);
+document.body.appendChild(computerMove);
 
-    do {
-        getChoice = prompt("Input your choice (ROCK, PAPER, SCISSORS or ! to end the program)").toUpperCase();
-    } while (!["ROCK", "PAPER", "SCISSORS", "!"].includes(getChoice));
+const message = document.createElement('div');
+document.body.appendChild(message);
 
-    return getChoice;
+function updateDisplay() {
+    roundDisplay.innerText = `Round(s) Played: ${rounds}`;
+    cScoreDisplay.innerText = `Computer Score: ${computerScore}`;
+    message.innerText = `${prompt}!`;
+    hScoreDisplay.innerText = `Human Score: ${humanScore}`;
+    computerMove.innerText = `Computer's move: ${computerChoice}`;
 }
 
-function game() {
-    let humanChoiceResult;
+const roundDisplay = document.createElement('div');
+roundDisplay.innerText = `Round(s) Played: ${rounds}`;
+document.body.appendChild(roundDisplay);
 
-    do {
-        let computerChoiceResult = computerChoice();
-        humanChoiceResult = humanChoice();
+const cScoreDisplay = document.createElement('div');
+cScoreDisplay.innerText = `Computer Score: ${computerScore}`;
+document.body.appendChild(cScoreDisplay);
 
-        if (humanChoiceResult === "!") {
-            console.log(`Game ended.\nHuman: ${humanScore}\nComputer: ${computerScore}`);
-            return; // Exit the function
-        }
-
-        console.log(`Computer chose: ${computerChoiceResult}`);
-        console.log(`Human chose: ${humanChoiceResult}`);
-
-        if (computerChoiceResult === humanChoiceResult) {
-            console.log("It's a tie!");
-        } else if (
-            (computerChoiceResult === "ROCK" && humanChoiceResult === "SCISSORS") ||
-            (computerChoiceResult === "SCISSORS" && humanChoiceResult === "PAPER") ||
-            (computerChoiceResult === "PAPER" && humanChoiceResult === "ROCK")
-        ) {
-            console.log("Computer Wins");
-            computerScore++;
-        } else {
-            console.log("Human Wins");
-            humanScore++;
-        }
-
-    } while (humanChoiceResult !== "!"); // Corrected syntax for while loop
-
-    // The following line is redundant and will never be reached, but it's left here for completeness
-    console.log(`Game ended.\nHuman: ${humanScore}\nComputer: ${computerScore}`);
-}
-
-game();
+const hScoreDisplay = document.createElement('div');
+hScoreDisplay.innerText = `Human Score: ${humanScore}`;
+document.body.appendChild(hScoreDisplay);
